@@ -5,7 +5,6 @@ import (
 	stripe "github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/charge"
 	"github.com/stripe/stripe-go/currency"
-	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -15,16 +14,8 @@ const (
 	AmountToCharge uint64 = 10000
 )
 
-type Home struct {
-	PublishableKey string
-}
-
 func rootHandler(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("home.html")
-	home := Home{
-		PublishableKey: os.Getenv("STRIPE_PUBLISHABLE_KEY"),
-	}
-	t.Execute(w, home)
+	http.ServeFile(w, r, "index.html")
 }
 
 func createDebit(token string, amount uint64, description string) *stripe.Charge {
