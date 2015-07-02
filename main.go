@@ -2,16 +2,15 @@ package main
 
 import (
 	"fmt"
-	stripe "github.com/stripe/stripe-go"
+	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/charge"
 	"github.com/stripe/stripe-go/currency"
 	"log"
 	"net/http"
-	"os"
 )
 
 const (
-	AmountToCharge uint64 = 10000
+	AmountToCharge uint64 = 100
 )
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
@@ -19,16 +18,17 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func createDebit(token string, amount uint64, description string) *stripe.Charge {
-	stripe.Key = os.Getenv("STRIPE_KEY")
+	stripe.Key = "sk_test_jhNUaFdOfykMNlXWZMmtUdwy" // get your secret test key from 
+	// https://dashboard.stripe.com/account/apikeys and place it here 
 
 	params := &stripe.ChargeParams{
 		Amount:   amount,
 		Currency: currency.USD,
-		Card: &stripe.CardParams{
-			Token: token,
-		},
-		Desc: description,
+		Desc: "test charge",
 	}
+
+	// obtain token from stripe
+	params.SetSource(token)
 
 	ch, err := charge.New(params)
 
@@ -47,6 +47,7 @@ func debitsHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "successful payment.")
 	}
 }
+
 
 func main() {
 	http.HandleFunc("/", rootHandler)
