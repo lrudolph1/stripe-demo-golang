@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	AmountToCharge uint64 = 100
+	AmountToCharge uint64 = 100 // amount in cents
 )
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
@@ -18,8 +18,9 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func createDebit(token string, amount uint64, description string) *stripe.Charge {
-	stripe.Key = "sk_test_jhNUaFdOfykMNlXWZMmtUdwy" // get your secret test key from 
+	// get your secret test key from 
 	// https://dashboard.stripe.com/account/apikeys and place it here 
+	stripe.Key = "sk_test_goes_here" 
 
 	params := &stripe.ChargeParams{
 		Amount:   amount,
